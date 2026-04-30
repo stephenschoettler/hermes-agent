@@ -123,6 +123,32 @@ def test_get_platform_tools_preserves_explicit_empty_selection():
     assert enabled == set()
 
 
+def test_get_platform_tools_keeps_kanban_off_for_normal_cli(monkeypatch):
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+
+    enabled = _get_platform_tools({}, "cli")
+
+    assert "kanban" not in enabled
+
+
+def test_get_platform_tools_enables_kanban_for_dispatcher_worker(monkeypatch):
+    monkeypatch.setenv("HERMES_KANBAN_TASK", "task-123")
+
+    enabled = _get_platform_tools({}, "cli")
+
+    assert "kanban" in enabled
+
+
+def test_get_platform_tools_recovers_kanban_for_configured_worker(monkeypatch):
+    monkeypatch.setenv("HERMES_KANBAN_TASK", "task-123")
+    config = {"platform_toolsets": {"cli": ["memory"]}}
+
+    enabled = _get_platform_tools(config, "cli")
+
+    assert "kanban" in enabled
+    assert "memory" in enabled
+
+
 def test_apply_toolset_change_from_default_does_not_enable_default_off_toolsets():
     """Disabling one default toolset on a fresh config must not persist
     default-off toolsets as explicitly enabled.

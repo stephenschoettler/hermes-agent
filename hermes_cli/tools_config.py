@@ -78,7 +78,15 @@ CONFIGURABLE_TOOLSETS = [
 # Toolsets that are OFF by default for new installs.
 # They're still in _HERMES_CORE_TOOLS (available at runtime if enabled),
 # but the setup checklist won't pre-select them for first-time users.
-_DEFAULT_OFF_TOOLSETS = {"moa", "homeassistant", "rl", "spotify", "discord", "discord_admin"}
+_DEFAULT_OFF_TOOLSETS = {
+    "moa",
+    "homeassistant",
+    "rl",
+    "spotify",
+    "discord",
+    "discord_admin",
+    "kanban",
+}
 
 # Platform-scoped toolsets: only appear in the `hermes tools` checklist for
 # these platforms, and only resolve/save for these platforms.  A toolset
@@ -895,7 +903,13 @@ def _get_platform_tools(
         claimed.update(resolve_toolset(ts_key))
     skip = configurable_keys | plugin_ts_keys | platform_default_keys
     skip |= {k for k in TOOLSETS if k.startswith("hermes-")}
-    skip |= set(_DEFAULT_OFF_TOOLSETS) - {platform}
+    default_off_recovery_skip = set(_DEFAULT_OFF_TOOLSETS) - {platform}
+    # Kanban is a non-configurable, worker-only toolset. Keep it out of
+    # normal chat/schema defaults, but recover it for dispatcher-spawned
+    # workers whose tool check_fn will pass because HERMES_KANBAN_TASK is set.
+    if os.getenv("HERMES_KANBAN_TASK"):
+        default_off_recovery_skip.discard("kanban")
+    skip |= default_off_recovery_skip
     for ts_key, ts_def in TOOLSETS.items():
         if ts_key in skip:
             continue
