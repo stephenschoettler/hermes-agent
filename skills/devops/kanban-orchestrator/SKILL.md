@@ -110,7 +110,7 @@ t3 = kanban_create(
 t4 = kanban_create(
     title="draft decision memo",
     assignee="<profile-C>",  # whichever profile drafts user-facing prose
-    body="Turn the analyst's recommendation into a 2-page memo for the CTO. Match the tone of previous decision memos in the team's knowledge base.",
+    body="Turn the analyst's recommendation into a 2-page memo for the engineering owner. Match the tone of previous decision memos in the team's knowledge base.",
     parents=[t3],
 )["task_id"]
 ```
@@ -145,7 +145,7 @@ Tell them what you created in plain prose, naming the actual profiles you used:
 > - **T1** (`<profile-A>`): cost comparison
 > - **T2** (`<profile-A>`): performance comparison, in parallel with T1
 > - **T3** (`<profile-B>`): synthesizes T1 + T2 into a recommendation
-> - **T4** (`<profile-C>`): turns T3 into a CTO memo
+> - **T4** (`<profile-C>`): turns T3 into an engineering memo
 >
 > The dispatcher will pick up T1 and T2 now. T3 starts when both finish. You'll get a gateway ping when T4 completes. Use the dashboard or `hermes kanban tail <id>` to follow along.
 

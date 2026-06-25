@@ -127,7 +127,7 @@ t3 = kanban_create(
 t4 = kanban_create(
     title="draft decision memo",
     assignee="<profile-C>",  # whichever profile drafts user-facing prose
-    body="Turn the analyst's recommendation into a 2-page memo for the CTO. Match the tone of previous decision memos in the team's knowledge base.",
+    body="Turn the analyst's recommendation into a 2-page memo for the engineering owner. Match the tone of previous decision memos in the team's knowledge base.",
     parents=[t3],
 )["task_id"]
 ```
@@ -162,7 +162,7 @@ kanban_complete(
 > - **T1**（`<profile-A>`）：成本对比
 > - **T2**（`<profile-A>`）：性能对比，与 T1 并行
 > - **T3**（`<profile-B>`）：综合 T1 + T2 生成建议
-> - **T4**（`<profile-C>`）：将 T3 转化为 CTO 备忘录
+> - **T4**（`<profile-C>`）：将 T3 转化为工程负责人备忘录
 >
 > 调度器现在将认领 T1 和 T2。T3 在两者完成后启动。T4 完成时你会收到 gateway 通知。使用仪表板或 `hermes kanban tail <id>` 跟踪进度。
 
